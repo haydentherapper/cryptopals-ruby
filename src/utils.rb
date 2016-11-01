@@ -13,9 +13,17 @@ class Utils
     byte_array.pack('C*').unpack('H*').first
   end
 
+  def self.xor_bytes(byte_array1, byte_array2)
+    min_size = [byte_array1.size, byte_array2.size].min
+    trunc_arr1 = byte_array1.take(min_size)
+    trunc_arr2 = byte_array2.take(min_size)
+    trunc_arr1.zip(trunc_arr2).map { |byte1, byte2| byte1 ^ byte2 }
+  end
+
   def self.xor_strings(hex_string1, hex_string2)
-    bytes_list = to_byte_array(hex_string1).zip(to_byte_array(hex_string2))
-    to_hex_string(bytes_list.map { |byte1, byte2| byte1 ^ byte2 })
+    byte_array1 = to_byte_array(hex_string1)
+    byte_array2 = to_byte_array(hex_string2)
+    to_hex_string(xor_bytes(byte_array1, byte_array2))
   end
 
   def self.score(hex_string)
@@ -43,5 +51,11 @@ class Utils
       [result, score(result)]
     end.to_h
     linesToScores.key(linesToScores.values.max)
+  end
+
+  def self.repeating_key_xor(input, key)
+    input.bytes.each_slice(key.length).map do |slice|
+      to_hex_string(xor_bytes(slice, key.bytes))
+    end.join
   end
 end
