@@ -1,14 +1,15 @@
 require_relative 'hex_string'
 
-class ByteArray
-  attr_accessor :byte_array
+class ByteArray < Array
+  attr_accessor :array
 
-  def initialize(byte_array)
-    @byte_array = byte_array
+  def initialize(array)
+    super(array)
+    @array = array
   end
 
   def to_hex_string
-    HexString.new(@byte_array.pack('C*').unpack('H*').first)
+    HexString.new(@array.pack('C*').unpack('H*').first)
   end
 
   def self.xor_arrays(byte_array1, byte_array2)

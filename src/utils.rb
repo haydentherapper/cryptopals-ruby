@@ -2,8 +2,8 @@ require_relative 'constants'
 
 class Utils
   def self.xor_strings(hex_string1, hex_string2)
-    byte_array1 = hex_string1.to_byte_array.byte_array
-    byte_array2 = hex_string2.to_byte_array.byte_array
+    byte_array1 = hex_string1.to_byte_array
+    byte_array2 = hex_string2.to_byte_array
     ByteArray.xor_arrays(byte_array1, byte_array2).to_hex_string
   end
 
@@ -14,7 +14,7 @@ class Utils
   end
 
   def self.decrypt_single_byte_xor(hex_string)
-    byte_array = hex_string.to_byte_array.byte_array
+    byte_array = hex_string.to_byte_array
     # For each possible byte...
     guesses = (1..255).map do |char|
       # ...decrypt the string with that byte...
@@ -36,7 +36,7 @@ class Utils
 
   def self.repeating_key_xor(input, key)
     slices = input.bytes.each_slice(key.length).map do |slice|
-      ByteArray.xor_arrays(slice, key.bytes).to_hex_string.hex_string
+      ByteArray.xor_arrays(slice, key.bytes).to_hex_string
     end
     HexString.new(slices.join)
   end
